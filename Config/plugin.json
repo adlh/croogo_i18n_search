@@ -1,0 +1,15 @@
+{
+	"name": "I18nSearch",
+	"description": "Plugin to enable i18n search on croogo.",
+
+	"author": "Andrea de la Huerta",
+	"authorEmail": "info@metamorfosys.de",
+	"authorUrl": "http://metamorfosys.de",
+
+	"dependencies": {
+		"plugins": [
+			"acl",
+			"extensions"
+		]
+	}
+}

@@ -44,15 +44,3 @@ Bootstrap as inline in a navbar:
 ?>
 ```
 
-## License ##
-
-Licensed under [The MIT License](http://www.opensource.org/licenses/mit-license.php)<br/>
-Redistributions of files must retain the above copyright notice.
-
-## Copyright ###
-
-Copyright 2009-2012<br/>
-[Cake Development Corporation](http://cakedc.com)<br/>
-1785 E. Sahara Avenue, Suite 490-423<br/>
-Las Vegas, Nevada 89104<br/>
-http://cakedc.com<br/>

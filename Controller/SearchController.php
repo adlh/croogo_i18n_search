@@ -49,10 +49,13 @@ class SearchController extends I18nSearchAppController {
  * @access public
  */
 	public function show() {
+        if (!$this->Node->Behaviors->loaded('I18nSearch.I18nSearchable')) {
+            $this->Node->Behaviors->load('I18nSearch.I18nSearchable');
+        }
 		$this->Prg->commonProcess();
 
 		$this->paginate = array(
-			'published',
+			'translated',
 			'roleId' => $this->Croogo->roleId(),
 		);
 

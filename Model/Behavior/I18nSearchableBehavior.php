@@ -18,17 +18,18 @@ class I18nSearchableBehavior extends ModelBehavior {
 		// TODO: maybe check first that model is a Node
 		$node = $model;
 
-		$q = isset($query['q']) ? '%' . $query['q'] . '%' : null;
-		$roleId = isset($query['roleId']) ? $query['roleId'] : null;
-		$typeAlias = isset($query['typeAlias']) ? $query['typeAlias'] : null;
-		$visibilityRolesField = $node->escapeField('visibility_roles');
+		$query = $node->buildQueryOrderLimit($query);
+		$query = $node->buildQueryTypeAlias($query);
+		$query = $node->buildQueryStatus($query);
+		$query = $node->buildQueryRole($query);
+		$query = $node->buildQueryContain($query);
 
-		$nodeOrConditions = array(
-			$node->escapeField('title') . ' LIKE' => $q,
-			$node->escapeField('excerpt') . ' LIKE' => $q,
-			$node->escapeField('body') . ' LIKE' => $q,
-			$node->escapeField('terms') . ' LIKE' => $q,
-		);
+		// build query like conditions with node-id list from i18n matches
+
+		$term = isset($query['q']) ? $query['q'] : null;
+		$term = empty($term) ? '%' : '%' . $term . '%';
+
+		$nodeLikeConditions = $node->nodeLikeConditions($term);
 
 		// If a non empty array with node ids exist, add it to conditions
 		if (isset($query['node_ids'])) {
@@ -38,42 +39,21 @@ class I18nSearchableBehavior extends ModelBehavior {
 				return is_int($i); });
 			// Check again if array is not empty after filtering it
 			if (!empty($node_ids)) {
-				$nodeOrConditions[$node->escapeField('id')] = $node_ids;
+				$nodeLikeConditions[$node->escapeField('id')] = $node_ids;
 			}
 		}
 
-		$defaults = array(
-			'order' => $node->escapeField('created') . ' DESC',
-			'limit' => Configure::read('Reading.nodes_per_page'),
+		$q = array(
 			'conditions' => array(
-				$node->escapeField('status') => $node->status(),
 				'AND' => array(
 					array(
-						'OR' => $nodeOrConditions,
-					),
-					array(
-						'OR' => array(
-							$visibilityRolesField => '',
-							$visibilityRolesField . ' LIKE' => '%"' . $roleId . '"%',
-						),
+						'OR' => $nodeLikeConditions,
 					),
 				),
-			),
-			'contain' => array(
-				'Meta',
-				'Taxonomy' => array(
-					'Term',
-					'Vocabulary',
-				),
-				'User',
 			),
 		);
-		if (isset($typeAlias)) {
-			$defaults['conditions'][$node->escapeField('type')] = $typeAlias;
-		}
-		$query = Hash::merge($query, $defaults);
 
-		return $query;
+		return $node->_mergeQueries($q, $query);
 	}
 
 }

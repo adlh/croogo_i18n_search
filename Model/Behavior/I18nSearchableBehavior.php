@@ -4,19 +4,19 @@ App::uses('ModelBehavior', 'Model');
 
 class I18nSearchableBehavior extends ModelBehavior {
 
-    var $mapMethods = array('/\b_findTranslated\b/' => '_findTranslated');
+	var $mapMethods = array('/\b_findTranslated\b/' => '_findTranslated');
 
-    function setup(Model $model, $config = array()) {
-        $model->findMethods['translated'] = true;
-    }
+	function setup(Model $model, $config = array()) {
+		$model->findMethods['translated'] = true;
+	}
 
-    function _findTranslated(Model $model, $functionCall, $state, $query, $results = array()) {
+	function _findTranslated(Model $model, $functionCall, $state, $query, $results = array()) {
 		if ($state == 'after') {
 			return $results;
 		}
 
-        // TODO: maybe check first that model is a Node
-        $node = $model;
+		// TODO: maybe check first that model is a Node
+		$node = $model;
 
 		$q = isset($query['q']) ? '%' . $query['q'] . '%' : null;
 		$roleId = isset($query['roleId']) ? $query['roleId'] : null;
@@ -44,7 +44,7 @@ class I18nSearchableBehavior extends ModelBehavior {
 
 		$defaults = array(
 			'order' => $node->escapeField('created') . ' DESC',
-            'limit' => Configure::read('Reading.nodes_per_page'),
+			'limit' => Configure::read('Reading.nodes_per_page'),
 			'conditions' => array(
 				$node->escapeField('status') => $node->status(),
 				'AND' => array(
@@ -73,7 +73,7 @@ class I18nSearchableBehavior extends ModelBehavior {
 		}
 		$query = Hash::merge($query, $defaults);
 
-        return $query;
-    }
+		return $query;
+	}
 
 }

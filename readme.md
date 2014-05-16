@@ -1,7 +1,6 @@
 # I18n Search Plugin for Croogo #
 
-Version 2.0 for croogo 2.0 or higher (Note: pull request still pending
-https://github.com/croogo/croogo/pull/481)
+Version 2.0 for croogo 2.0 or higher.
 
 This plugin allows you to search through node-translations too and is supposed
 to be used together with the Translate plugin from croogo.
